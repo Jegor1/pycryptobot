@@ -1050,12 +1050,19 @@ class TelegramBot(TelegramBotBase):
 
     def checkconnection(self) -> bool:
         """internet connection check"""
+        from urllib.request import Request, urlopen
+        from urllib.error import URLError, HTTPError
+        req = Request("https://api.telegram.org")
         try:
-            urllib.request.urlopen("https://api.telegram.org")
-            return True
-        except:
-            print("No internet connection")
+            response = urlopen(req)
+        except HTTPError as e:
+            print('Error code: ', e.code)
             return False
+        except URLError as e:
+            print('Reason: ', e.reason)
+            return False
+        else:
+            return True
 
 
 def main():
